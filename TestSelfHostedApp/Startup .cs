@@ -51,7 +51,7 @@ namespace TestSelfHostedApp
             var container =  appBuilder.RegisterDependencies(config);
             this.RegisterDependencies(container);
 
-            GlobalConfiguration.Configuration
+            Hangfire.GlobalConfiguration.Configuration
                 .UseLiteDbStorage()
                 .UseLightInjectActivator(container)
                 .UseSerilogLogProvider();

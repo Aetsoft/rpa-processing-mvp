@@ -86,6 +86,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -97,11 +98,15 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.Owin, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.7\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -112,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_config\IoCRegistration.cs" />
+    <Compile Include="Controller\OcrController.cs" />
     <Compile Include="Controller\ValuesController.cs" />
     <Compile Include="Logger\OwinExceptionHandlerMiddleware.cs" />
     <Compile Include="Services\MessageBus.cs" />
@@ -142,6 +148,10 @@
     <ProjectReference Include="..\Business.Abstraction\Business.Abstraction.csproj">
       <Project>{145769d6-4e54-46d1-a471-b0df01df50da}</Project>
       <Name>Business.Abstraction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Business.Implementation\Business.Implementation.csproj">
+      <Project>{61FCABE2-0EC2-473B-82CB-D241B4CC8C58}</Project>
+      <Name>Business.Implementation</Name>
     </ProjectReference>
     <ProjectReference Include="..\DomainModels\DomainModels.csproj">
       <Project>{41c40416-47c4-48a1-8da2-e16255f4d8ea}</Project>
