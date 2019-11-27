@@ -28,6 +28,8 @@ namespace TestSelfHostedApp
     {
         // This code configures Web API. The Startup class is specified as a type
         // parameter in the WebApp.Start method.
+        bool _wasDisposed = false;
+
         public virtual void Configuration(IAppBuilder appBuilder)
         {
             appBuilder.Use<OwinExceptionHandlerMiddleware>(Log.Logger);
@@ -77,21 +79,28 @@ namespace TestSelfHostedApp
                 ServerCheckInterval = TimeSpan.FromSeconds(1)
             }, JobStorage.Current);
 
-            if (token != CancellationToken.None)
+            Action disposeObjects = () =>
             {
-                var fullNameOfDll = Assembly.GetExecutingAssembly().FullName;
-                token.Register(() =>
+                if (!_wasDisposed)
                 {
+                    _wasDisposed = true;
+                    var fullNameOfDll = Assembly.GetExecutingAssembly().FullName;
                     Log.Logger.Warning($"Close {this.GetType().FullName} application \n  {fullNameOfDll}");
                     client.Dispose();
                     container.Dispose();
-                });
+                }
+            };
+            
+            if (token != CancellationToken.None)
+            {
+                client.WaitForShutdown(TimeSpan.FromSeconds(10));
+                token.Register(disposeObjects);
             }
             else
             {
                 Log.Fatal("Error with application start");
             }
-
+            AppDomain.CurrentDomain.ProcessExit += (sender, args) => { disposeObjects(); };
         }
 
         public virtual void RegisterDependencies(ServiceContainer container)
