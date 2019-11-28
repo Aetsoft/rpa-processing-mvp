@@ -17,7 +17,13 @@ namespace Business.Implementation
             {SupportedLangs.Ru, "rus"},
             {SupportedLangs.En, "eng"},
         };
-        private string path = @"./tessdata";
+        private static string path = String.Empty;
+
+        static TesseractInstance()
+        {
+            path = AppDomain.CurrentDomain.BaseDirectory + "Tesseract";
+        }
+        
 
         public string ReadText(string base64, SupportedLangs lang)
         {
@@ -37,7 +43,7 @@ namespace Business.Implementation
 
             if (_supportedLangDictionary.TryGetValue(lang, out langValue))
             {
-                using (var engine = new TesseractEngine(this.path, langValue, EngineMode.Default))
+                using (var engine = new TesseractEngine(path, langValue, EngineMode.Default))
                 {
                     using (var img = PixConverter.ToPix(imgsource))
                     {
