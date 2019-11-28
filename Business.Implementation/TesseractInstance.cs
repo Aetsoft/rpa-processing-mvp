@@ -4,29 +4,55 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.Abstraction;
+using DomainModels.Enums;
 using Tesseract;
 
 namespace Business.Implementation
 {
-    public class TesseractInstance
+    public class TesseractInstance: IOcrEngine
     {
-        private static TesseractInstance instance = new TesseractInstance();
-        private TesseractEngine engine;
-
-        private TesseractInstance()
+        private static Dictionary<SupportedLangs,string> _supportedLangDictionary=new Dictionary<SupportedLangs, string>()
         {
-            string path = @"./tessdata";
-            engine = new TesseractEngine(path, "rus", EngineMode.Default);
+            {SupportedLangs.Ru, "rus"},
+            {SupportedLangs.En, "eng"},
+        };
+        private string path = @"./tessdata";
+
+        public string ReadText(string base64, SupportedLangs lang)
+        {
+            byte[] imageBytes = Convert.FromBase64String(base64);
+            using (var stream = new System.IO.MemoryStream(imageBytes))
+            using (Bitmap bitImage = new Bitmap(Image.FromStream(stream)))
+            {
+                return this.ReadText(bitImage, lang);
+            }
         }
 
-        public static TesseractInstance getInstance()
-        {
-            return instance;
-        }
 
-        public string ReadText(Bitmap imgsource)
+        public string ReadText(Bitmap imgsource, SupportedLangs lang)
         {
-            return engine.Process(PixConverter.ToPix(imgsource)).GetText().ToString();
+            string langValue = String.Empty;
+            var ocrtext = string.Empty;
+
+            if (_supportedLangDictionary.TryGetValue(lang, out langValue))
+            {
+                using (var engine = new TesseractEngine(this.path, langValue, EngineMode.Default))
+                {
+                    using (var img = PixConverter.ToPix(imgsource))
+                    {
+                        using (var page = engine.Process(img))
+                        {
+                            ocrtext = page.GetText();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("unsupported lang");
+            }
+            return ocrtext;
         }
     
     }

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{25BAB773-331F-4959-B7F0-E2A49CEEB2EB}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>TestSelfHostedApp</RootNamespace>
-    <AssemblyName>TestSelfHostedApp</AssemblyName>
+    <RootNamespace>RpaSelfHostedApp</RootNamespace>
+    <AssemblyName>RpaSelfHostedApp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -120,6 +120,8 @@
     <Compile Include="Controller\OcrController.cs" />
     <Compile Include="Controller\ValuesController.cs" />
     <Compile Include="Logger\OwinExceptionHandlerMiddleware.cs" />
+    <Compile Include="Models\OcrRequestModel.cs" />
+    <Compile Include="Models\OcrResponseModel.cs" />
     <Compile Include="Services\MessageBus.cs" />
     <Compile Include="Startup .cs" />
     <Compile Include="Program.cs" />

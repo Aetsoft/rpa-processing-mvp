@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Http;
 using Business.Abstraction;
+using IoCRegistration;
 using LightInject;
 using LightInject.WebApi;
 using Owin;
@@ -26,6 +27,7 @@ namespace TestSelfHostedApp.App_config
             container.RegisterScoped<ILogger>(factory => Serilog.Log.Logger);
             container.RegisterSingleton<IMessageBus, MessageBus>();
 
+            container.RegisterAppDependencies();
 
             configuration.DependencyResolver = new LightInjectWebApiDependencyResolver(container);
 

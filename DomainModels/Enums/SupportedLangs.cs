@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DomainModels
+namespace DomainModels.Enums
 {
-    public class Class1
+    public enum SupportedLangs
     {
+        Ru = 0,
+        En = 1
     }
 }

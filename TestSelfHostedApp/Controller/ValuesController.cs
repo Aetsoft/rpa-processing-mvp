@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using Business.Abstraction;
 
-namespace RpaSolution.Controller
+namespace RpaSelfHostedApp.Controller
 {
     public class ValuesController : ApiController
     {

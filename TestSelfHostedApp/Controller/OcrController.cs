@@ -1,51 +1,42 @@
-﻿using Business.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.Net;
 using System.Web.Http;
-using Domain.Models;
-using Business.Implementation;
-using System.Drawing;
+using Business.Abstraction;
+using RpaSelfHostedApp.Models;
+using Swashbuckle.Swagger.Annotations;
 
-namespace RpaSolution.Controller
+namespace RpaSelfHostedApp.Controller
 {
     public class OcrController : ApiController
     {
-
-        public OcrController(ITestClass test, Serilog.ILogger logger, IMessageBus messageBus) : base()
+        private readonly Serilog.ILogger _logger;
+        private readonly IOcrEngine _ocrEngine;
+        public OcrController(Serilog.ILogger logger, IOcrEngine ocrEngine) : base()
         {
-            logger.Debug(test.TestValue);
-            messageBus.Run(() => Console.WriteLine("-+"));
-            messageBus.Run<ITestClass>((log) => log.Run());
-
+            this._logger = logger;
+            this._ocrEngine = ocrEngine;
         }
         // GET api/ocr
-        public string Get()
+        [SwaggerResponse(HttpStatusCode.OK, "Document was OCR-ed successfully", typeof(string))]
+        public IHttpActionResult Get()
         {
-            return "ocr service included in package";
+            return Ok("ocr service included in package");
         }
 
-        // POST api/ocr/base64
-        public OcrResponseModel Post([FromBody] PostBase64DataOcrRequestModel value)
+        /// <summary>
+        ///  POST api/ocr/base64
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [SwaggerResponse(HttpStatusCode.OK, "Document was OCR-ed successfully", typeof(OcrResponseModel))]
+        public IHttpActionResult Post([FromBody] PostBase64DataOcrRequestModel value)
         {
-            OcrResponseModel response = new OcrResponseModel();
-            try
+            OcrResponseModel response = new OcrResponseModel
             {
-                Bitmap bitImage = new Bitmap(Image.FromStream(new System.IO.MemoryStream(Convert.FromBase64String(value.GetBase64String()))));
-                string text = TesseractInstance.getInstance().ReadText(bitImage);
-
-                response.SetOcrResponseCode("200");
-                response.SetOcrTextResponse(text);
-            } catch
-            {
-                response.SetOcrTextResponse(null);
-                response.SetOcrResponseCode("500");
-            }
-
-            return response;
-            
+                OcrResponseCode = "200",
+                OcrTextResponse = this._ocrEngine.ReadText(value.Base64String, value.Language)
+            };
+            return Ok(response);
         }
     }
 }

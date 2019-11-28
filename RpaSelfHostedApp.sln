@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.902
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfHostedApp", "TestSelfHostedApp\SelfHostedApp.csproj", "{25BAB773-331F-4959-B7F0-E2A49CEEB2EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpaSelfHostedApp", "TestSelfHostedApp\RpaSelfHostedApp.csproj", "{25BAB773-331F-4959-B7F0-E2A49CEEB2EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoCRegistration", "IoCRegistration\IoCRegistration.csproj", "{694EC435-CF19-4697-959A-04897D1AD0DA}"
 EndProject

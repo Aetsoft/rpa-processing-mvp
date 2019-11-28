@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http.ExceptionHandling;
+using System.Web.Http.Results;
 using Microsoft.Owin;
+using Newtonsoft.Json;
 using Serilog.Context;
 
 namespace TestSelfHostedApp.Logger
@@ -26,11 +31,34 @@ namespace TestSelfHostedApp.Logger
                 {
                     await this.Next.Invoke(context).ConfigureAwait(false);
                 }
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    this.logger.Error(ex, $"{nameof(OwinExceptionHandlerMiddleware)} caught exception.");
-                    throw;
+                    this.logger.Error(exception, $"{nameof(OwinExceptionHandlerMiddleware)} caught exception.");
+
+                    var errorDataModel = new 
+                    {
+                        Message = "Internal server error occurred, error has been reported!",
+                        Details = exception.Message,
+                        ErrorReference = exception.Data["ErrorReference"] != null 
+                            ? exception.Data["ErrorReference"].ToString() 
+                            : string.Empty,
+                        DateTime = DateTime.UtcNow
+                    };
+
+                    context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                    context.Response.ReasonPhrase = "Internal Server Error";
+                    context.Response.ContentType = "application/json";
+                    context.Response.Write(JsonConvert.SerializeObject(errorDataModel));
                 }
+            }
+        }
+
+        public class PassthroughExceptionHandler : ExceptionHandler, IExceptionHandler
+        {
+            public override void Handle(ExceptionHandlerContext context)
+            {
+                var info = ExceptionDispatchInfo.Capture(context.Exception);
+                info.Throw();
             }
         }
     }

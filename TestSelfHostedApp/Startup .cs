@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
 using Hangfire;
 using Hangfire.LiteDB;
 using IoCRegistration;
@@ -34,8 +35,12 @@ namespace TestSelfHostedApp
         {
             appBuilder.Use<OwinExceptionHandlerMiddleware>(Log.Logger);
 
+
             // Configure Web API for self-host. 
             HttpConfiguration config = new HttpConfiguration();
+            config.Services.Replace(typeof(IExceptionHandler), new OwinExceptionHandlerMiddleware.PassthroughExceptionHandler());
+
+
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
@@ -49,7 +54,6 @@ namespace TestSelfHostedApp
 
             appBuilder.UseWebApi(config);
             var container =  appBuilder.RegisterDependencies(config);
-            this.RegisterDependencies(container);
 
             Hangfire.GlobalConfiguration.Configuration
                 .UseLiteDbStorage()
@@ -102,10 +106,6 @@ namespace TestSelfHostedApp
             }
             AppDomain.CurrentDomain.ProcessExit += (sender, args) => { disposeObjects(); };
         }
-
-        public virtual void RegisterDependencies(ServiceContainer container)
-        {
-            container.RegisterAppDependencies();
-        }
+        
     }
 }
