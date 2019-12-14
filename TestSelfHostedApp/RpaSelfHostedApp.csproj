@@ -118,11 +118,12 @@
   <ItemGroup>
     <Compile Include="App_config\IoCRegistration.cs" />
     <Compile Include="Controller\OcrController.cs" />
-    <Compile Include="Controller\ValuesController.cs" />
     <Compile Include="Logger\OwinExceptionHandlerMiddleware.cs" />
+    <Compile Include="Models\RequestModelObject.cs" />
     <Compile Include="Models\OcrRequestModel.cs" />
     <Compile Include="Models\OcrResponseModel.cs" />
     <Compile Include="Services\MessageBus.cs" />
+    <Compile Include="Services\Util\ImgUtils.cs" />
     <Compile Include="Startup .cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

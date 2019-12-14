@@ -11,6 +11,7 @@ namespace IoCRegistration
             //register other services
             container.RegisterScoped<ITestClass, TestClass>();
             container.RegisterScoped<IOcrEngine, TesseractInstance>();
+
         }
     }
 }

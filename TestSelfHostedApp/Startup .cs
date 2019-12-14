@@ -40,12 +40,8 @@ namespace TestSelfHostedApp
             HttpConfiguration config = new HttpConfiguration();
             config.Services.Replace(typeof(IExceptionHandler), new OwinExceptionHandlerMiddleware.PassthroughExceptionHandler());
 
+            config.MapHttpAttributeRoutes();
 
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
             config.EnableSwagger(c =>
                 {
                     c.SingleApiVersion("v1", "RPA web API");

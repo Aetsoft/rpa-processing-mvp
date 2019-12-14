@@ -11,6 +11,7 @@ namespace Business.Abstraction
     public interface IOcrEngine
     {
         string ReadText(string base64value, SupportedLangs lang);
+        string ReadText(Bitmap imgsource, SupportedLangs lang);
     }
 
     
