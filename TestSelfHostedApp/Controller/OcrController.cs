@@ -76,8 +76,8 @@ namespace RpaSelfHostedApp.Controller
         {
             using (Bitmap wholeImage = ImgUtils.toBitmap(json.Base64String))
             {
-                
-                Parallel.ForEach(json.Fields, (field) =>
+                // TODO: check why no longer works from Parallel.ForEach
+                json.Fields.ForEach( (field) =>
                 {
                     Rectangle box = new Rectangle(field.X, field.Y, field.Width, field.Height);
                     field.Content = this._ocrEngine.ReadText(wholeImage.Clone(box, wholeImage.PixelFormat), field.Language);
