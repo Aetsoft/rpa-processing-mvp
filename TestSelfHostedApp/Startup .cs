@@ -49,6 +49,8 @@ namespace TestSelfHostedApp
                 .EnableSwaggerUi();
 
             appBuilder.UseWebApi(config);
+            appBuilder.MapSignalR();
+
             var container =  appBuilder.RegisterDependencies(config);
 
             Hangfire.GlobalConfiguration.Configuration
