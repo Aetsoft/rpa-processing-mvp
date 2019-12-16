@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RpaSelfHostedApp</name>
+    </assembly>
+    <members>
+        <member name="M:RpaSelfHostedApp.Controller.OcrController.Get">
+            <summary>
+            GET api/ocr
+            </summary>
+            <returns>Message on OCR services package status</returns>
+        </member>
+        <member name="M:RpaSelfHostedApp.Controller.OcrController.GetInfo">
+            <summary>
+            GET api/ocr/info
+            </summary>
+            <returns>Supported language codes</returns>
+        </member>
+        <member name="M:RpaSelfHostedApp.Controller.OcrController.Post(RpaSelfHostedApp.Models.PostBase64DataOcrRequestModel)">
+            <summary>
+            POST api/ocr/base64
+            </summary>
+            <param name="json"></param>
+            <returns>Ocr-ed text for whole document</returns>
+        </member>
+        <member name="M:RpaSelfHostedApp.Controller.OcrController.PostAll(RpaSelfHostedApp.Models.MultipleFieldsOcrRequestModel)">
+            <summary>
+            POST api/ocr/bulk
+            </summary>
+            <param name="json"></param>
+            <returns>Ocr-ed text at specified coordinates for the document</returns>
+        </member>
+        <member name="M:TestSelfHostedApp.Services.MessageBus.ContinueJobWith``1(System.Linq.Expressions.Expression{System.Action{``0}},System.String)">
+            <summary>
+            Continuations are executed when its parent job has been finished (OnlyOnSucceededState).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="expression"></param>
+            <param name="parentJobId"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

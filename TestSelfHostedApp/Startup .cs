@@ -18,6 +18,7 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.Logging;
 using Microsoft.Owin.StaticFiles;
 using Owin;
+using RpaSelfHostedApp.App_config;
 using Serilog;
 using Swashbuckle.Application;
 using TestSelfHostedApp.App_config;
@@ -45,6 +46,9 @@ namespace TestSelfHostedApp
             config.EnableSwagger(c =>
                 {
                     c.SingleApiVersion("v1", "RPA web API");
+                    c.DescribeAllEnumsAsStrings();
+                    c.IncludeXmlComments("RpaSelfHostedApp.xml");
+                    c.OperationFilter<SwaggerParameterOperationFilter>();
                 })
                 .EnableSwaggerUi();
 

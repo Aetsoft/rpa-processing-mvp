@@ -80,7 +80,10 @@ namespace RpaSelfHostedApp.Controller
                 json.Fields.ForEach( (field) =>
                 {
                     Rectangle box = new Rectangle(field.X, field.Y, field.Width, field.Height);
-                    field.Content = this._ocrEngine.ReadText(wholeImage.Clone(box, wholeImage.PixelFormat), field.Language);
+                    using (var cloneOfImage = wholeImage.Clone(box, wholeImage.PixelFormat))
+                    {
+                        field.Content = this._ocrEngine.ReadText(cloneOfImage, field.Language);
+                    }
                 });
 
                 MultipleFieldsOcrResponseModel response = new MultipleFieldsOcrResponseModel()
