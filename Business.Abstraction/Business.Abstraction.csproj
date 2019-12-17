@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="IMessageBus.cs" />
     <Compile Include="IOcrEngine.cs" />
-    <Compile Include="IOcrEngineManager.cs" />
+    <Compile Include="IOcrEnginePoolManager.cs" />
     <Compile Include="ITestClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
