@@ -16,11 +16,11 @@ namespace RpaSelfHostedApp.Controller
     public class OcrController : ApiController
     {
         private readonly Serilog.ILogger _logger;
-        private readonly IOcrEngineManager _ocrEngine;
-        public OcrController(Serilog.ILogger logger, IOcrEngineManager ocrEngine) : base()
+        private readonly IOcrEnginePoolManager _ocrEnginePool;
+        public OcrController(Serilog.ILogger logger, IOcrEnginePoolManager ocrEnginePool) : base()
         {
             this._logger = logger;
-            this._ocrEngine = ocrEngine;
+            this._ocrEnginePool = ocrEnginePool;
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace RpaSelfHostedApp.Controller
             OcrResponseModel response = new OcrResponseModel
             {
                 OcrResponseCode = "200",
-                OcrTextResponse = this._ocrEngine.GetEngineForLang(value.Language).ReadText(value.Base64String)
+                OcrTextResponse = this._ocrEnginePool.GetEngineForLang(value.Language).ReadText(value.Base64String)
             };
             return Ok(response);
         }
@@ -96,31 +96,33 @@ namespace RpaSelfHostedApp.Controller
 
                 try
                 {
-                    Parallel.ForEach(convertedSections, field =>
-                    {
-                        field.field.Content = this._ocrEngine.GetEngineForLang(field.field.Language).ReadText(field.sector);
-                    });
+                    Parallel.ForEach(convertedSections,
+                        field =>
+                        {
+                            field.field.Content = this._ocrEnginePool.GetEngineForLang(field.field.Language).ReadText(field.sector);
+                        });
 
                 }
                 catch (Exception e)
+                {
+                    throw;
+                }
+                finally
                 {
                     foreach (var section in convertedSections)
                     {
                         section.sector?.Dispose();
                     }
-
-                    throw;
                 }
-
-
-                MultipleFieldsOcrResponseModel response = new MultipleFieldsOcrResponseModel()
-                {
-                    Fields = json.Fields,
-                    OcrResponseCode = "200"
-                };
-
-                return Ok(response);
             }
+
+            MultipleFieldsOcrResponseModel response = new MultipleFieldsOcrResponseModel()
+            {
+                Fields = json.Fields,
+                OcrResponseCode = "200"
+            };
+
+            return Ok(response);
         }
     }
 }

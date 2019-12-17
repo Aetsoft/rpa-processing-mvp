@@ -10,7 +10,7 @@ namespace IoCRegistration
         {
             //register other services
             container.RegisterScoped<ITestClass, TestClass>();
-            container.RegisterSingleton<IOcrEngineManager, OcrEngineManager>();
+            container.RegisterSingleton<IOcrEnginePoolManager, OcrEnginePoolManager>();
         }
     }
 }
