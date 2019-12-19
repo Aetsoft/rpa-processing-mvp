@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -15,11 +16,11 @@ namespace RpaSelfHostedApp.Controller
     public class OcrController : ApiController
     {
         private readonly Serilog.ILogger _logger;
-        private readonly IOcrEngine _ocrEngine;
-        public OcrController(Serilog.ILogger logger, IOcrEngine ocrEngine) : base()
+        private readonly IOcrEnginePoolManager _ocrEnginePool;
+        public OcrController(Serilog.ILogger logger, IOcrEnginePoolManager ocrEnginePool) : base()
         {
             this._logger = logger;
-            this._ocrEngine = ocrEngine;
+            this._ocrEnginePool = ocrEnginePool;
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace RpaSelfHostedApp.Controller
             OcrResponseModel response = new OcrResponseModel
             {
                 OcrResponseCode = "200",
-                OcrTextResponse = this._ocrEngine.ReadText(value.Base64String, value.Language)
+                OcrTextResponse = this._ocrEnginePool.GetEngineForLang(value.Language).ReadText(value.Base64String)
             };
             return Ok(response);
         }
@@ -76,25 +77,52 @@ namespace RpaSelfHostedApp.Controller
         {
             using (Bitmap wholeImage = ImgUtils.toBitmap(json.Base64String))
             {
-                // TODO: check why no longer works from Parallel.ForEach
-                json.Fields.ForEach( (field) =>
+
+                var convertedSections = json.Fields.Select(field =>
                 {
-                    Rectangle box = new Rectangle(field.X, field.Y, field.Width, field.Height);
-                    using (var cloneOfImage = wholeImage.Clone(box, wholeImage.PixelFormat))
+                    try
                     {
-                        field.Content = this._ocrEngine.ReadText(cloneOfImage, field.Language);
+                        Rectangle box = new Rectangle(field.X, field.Y, field.Width, field.Height);
+                        return new { field, sector = wholeImage.Clone(box, wholeImage.PixelFormat) };
                     }
-                });
+                    catch (Exception e)
+                    {
+                        this._logger.Error(e, e.Message);
+                        return null;
+                    }
+                   
 
-                MultipleFieldsOcrResponseModel response = new MultipleFieldsOcrResponseModel()
+                }).ToArray().Where(n => n.sector != null).ToArray();
+
+                try
                 {
-                    Fields = json.Fields,
-                    OcrResponseCode = "200"
-                };
+                    Parallel.ForEach(convertedSections,
+                        field =>
+                        {
+                            field.field.Content = this._ocrEnginePool.GetEngineForLang(field.field.Language).ReadText(field.sector);
+                        });
 
-                return Ok(response);
+                }
+                catch (Exception e)
+                {
+                    throw;
+                }
+                finally
+                {
+                    foreach (var section in convertedSections)
+                    {
+                        section.sector?.Dispose();
+                    }
+                }
             }
-        }
 
+            MultipleFieldsOcrResponseModel response = new MultipleFieldsOcrResponseModel()
+            {
+                Fields = json.Fields,
+                OcrResponseCode = "200"
+            };
+
+            return Ok(response);
+        }
     }
 }
