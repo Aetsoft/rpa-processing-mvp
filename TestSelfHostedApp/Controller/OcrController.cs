@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net;
@@ -77,11 +78,33 @@ namespace RpaSelfHostedApp.Controller
         {
             using (Bitmap localImage = ImgUtils.toBitmap(json.Base64String))
             {
-                foreach (var field in json.Fields)
+                List<FieldWithRegion> preparedList = new List<FieldWithRegion>();
+
+                try
                 {
-                    using (var sector = localImage.GetRectFromBitmap(field.X, field.Y, field.Width, field.Height))
+                    foreach (var field in json.Fields)
                     {
-                        field.Content = this._ocrEnginePool.GetEngineForLang(field.Language).ReadText(sector);
+                        Bitmap sector = localImage.GetRectFromBitmap(field.X, field.Y, field.Width, field.Height);
+                        preparedList.Add(new FieldWithRegion(){field = field,sector = sector});
+                    }
+
+                    Parallel.ForEach(preparedList,
+                        element =>
+                        {
+                            element.field.Content = this._ocrEnginePool.GetEngineForLang(element.field.Language).ReadText(element.sector);
+                        });
+
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, e.Message);
+                    throw;
+                }
+                finally
+                {
+                    foreach (var withRegion in preparedList)
+                    {
+                        withRegion.sector?.Dispose();
                     }
                 }
             }
@@ -93,6 +116,12 @@ namespace RpaSelfHostedApp.Controller
             };
 
             return Ok(response);
+        }
+
+        class FieldWithRegion
+        {
+            public DocumentBoxModel field { get; set; }
+            public Bitmap sector { get; set; }
         }
     }
 }
