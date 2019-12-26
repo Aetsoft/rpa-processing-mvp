@@ -75,43 +75,13 @@ namespace RpaSelfHostedApp.Controller
         [SwaggerResponse(HttpStatusCode.OK, "Document was OCR-ed successfully", typeof(MultipleFieldsOcrResponseModel))]
         public IHttpActionResult PostAll([FromBody] MultipleFieldsOcrRequestModel json)
         {
-            using (Bitmap wholeImage = ImgUtils.toBitmap(json.Base64String))
+            using (Bitmap localImage = ImgUtils.toBitmap(json.Base64String))
             {
-
-                var convertedSections = json.Fields.Select(field =>
+                foreach (var field in json.Fields)
                 {
-                    try
+                    using (var sector = localImage.GetRectFromBitmap(field.X, field.Y, field.Width, field.Height))
                     {
-                        Rectangle box = new Rectangle(field.X, field.Y, field.Width, field.Height);
-                        return new { field, sector = wholeImage.Clone(box, wholeImage.PixelFormat) };
-                    }
-                    catch (Exception e)
-                    {
-                        this._logger.Error(e, e.Message);
-                        return null;
-                    }
-                   
-
-                }).ToArray().Where(n => n.sector != null).ToArray();
-
-                try
-                {
-                    Parallel.ForEach(convertedSections,
-                        field =>
-                        {
-                            field.field.Content = this._ocrEnginePool.GetEngineForLang(field.field.Language).ReadText(field.sector);
-                        });
-
-                }
-                catch (Exception e)
-                {
-                    throw;
-                }
-                finally
-                {
-                    foreach (var section in convertedSections)
-                    {
-                        section.sector?.Dispose();
+                        field.Content = this._ocrEnginePool.GetEngineForLang(field.Language).ReadText(sector);
                     }
                 }
             }
