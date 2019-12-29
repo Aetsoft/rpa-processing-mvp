@@ -30,6 +30,17 @@
             <param name="json"></param>
             <returns>Ocr-ed text at specified coordinates for the document</returns>
         </member>
+        <member name="M:RpaSelfHostedApp.Services.Util.ImgUtils.GetRectFromBitmap(System.Drawing.Bitmap,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Get rectangle area from original image. Non-thread safe
+            </summary>
+            <param name="localImage"></param>
+            <param name="X"></param>
+            <param name="Y"></param>
+            <param name="Width"></param>
+            <param name="Height"></param>
+            <returns></returns>
+        </member>
         <member name="M:TestSelfHostedApp.Services.MessageBus.ContinueJobWith``1(System.Linq.Expressions.Expression{System.Action{``0}},System.String)">
             <summary>
             Continuations are executed when its parent job has been finished (OnlyOnSucceededState).

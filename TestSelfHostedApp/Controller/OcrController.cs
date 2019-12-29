@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net;
@@ -75,43 +76,35 @@ namespace RpaSelfHostedApp.Controller
         [SwaggerResponse(HttpStatusCode.OK, "Document was OCR-ed successfully", typeof(MultipleFieldsOcrResponseModel))]
         public IHttpActionResult PostAll([FromBody] MultipleFieldsOcrRequestModel json)
         {
-            using (Bitmap wholeImage = ImgUtils.toBitmap(json.Base64String))
+            using (Bitmap localImage = ImgUtils.toBitmap(json.Base64String))
             {
-
-                var convertedSections = json.Fields.Select(field =>
-                {
-                    try
-                    {
-                        Rectangle box = new Rectangle(field.X, field.Y, field.Width, field.Height);
-                        return new { field, sector = wholeImage.Clone(box, wholeImage.PixelFormat) };
-                    }
-                    catch (Exception e)
-                    {
-                        this._logger.Error(e, e.Message);
-                        return null;
-                    }
-                   
-
-                }).ToArray().Where(n => n.sector != null).ToArray();
+                List<FieldWithRegion> preparedList = new List<FieldWithRegion>();
 
                 try
                 {
-                    Parallel.ForEach(convertedSections,
-                        field =>
+                    foreach (var field in json.Fields)
+                    {
+                        Bitmap sector = localImage.GetRectFromBitmap(field.X, field.Y, field.Width, field.Height);
+                        preparedList.Add(new FieldWithRegion(){field = field,sector = sector});
+                    }
+
+                    Parallel.ForEach(preparedList,
+                        element =>
                         {
-                            field.field.Content = this._ocrEnginePool.GetEngineForLang(field.field.Language).ReadText(field.sector);
+                            element.field.Content = this._ocrEnginePool.GetEngineForLang(element.field.Language).ReadText(element.sector);
                         });
 
                 }
                 catch (Exception e)
                 {
+                    _logger.Error(e, e.Message);
                     throw;
                 }
                 finally
                 {
-                    foreach (var section in convertedSections)
+                    foreach (var withRegion in preparedList)
                     {
-                        section.sector?.Dispose();
+                        withRegion.sector?.Dispose();
                     }
                 }
             }
@@ -123,6 +116,12 @@ namespace RpaSelfHostedApp.Controller
             };
 
             return Ok(response);
+        }
+
+        class FieldWithRegion
+        {
+            public DocumentBoxModel field { get; set; }
+            public Bitmap sector { get; set; }
         }
     }
 }
