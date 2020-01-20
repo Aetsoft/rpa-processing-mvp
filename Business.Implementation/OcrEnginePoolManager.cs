@@ -33,7 +33,7 @@ namespace Business.Implementation
 
         public OcrEnginePoolManager()
         {
-            path = AppDomain.CurrentDomain.BaseDirectory + "Tesseract";
+            path = AppDomain.CurrentDomain.BaseDirectory + "Tesseract/tessdata";
 
             foreach (var lang in _supportedLangDictionary)
             {

@@ -24,6 +24,8 @@ namespace RpaSelfHostedApp.Controller
             this._ocrEnginePool = ocrEnginePool;
         }
 
+        public OcrController() { }
+
         /// <summary>
         /// GET api/ocr
         /// </summary>

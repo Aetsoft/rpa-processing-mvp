@@ -38,39 +38,46 @@ namespace RpaSelfHostedApp.Services.Util
         /// <returns></returns>
         public static Bitmap GetRectFromBitmap(this Bitmap localImage, int X, int Y, int Width, int Height)
         {
-            Rectangle rect = new Rectangle(X, Y, Width, Height);
-            int totalWidth = rect.Left + rect.Width; //think -the same as Right property
+            
+                //Console.WriteLine("==image " + localImage.Width + "x" + localImage.Height);
+                //Console.WriteLine(X + " " + Y + " " + Width + "x" + Height);
+                Rectangle rect = new Rectangle(X, Y, Width, Height);
+                /* 
+                int totalWidth = rect.Left + rect.Width; //think -the same as Right property
 
-            int allowableWidth = localImage.Width - rect.Left;
-            int finalWidth = 0;
+                int allowableWidth = localImage.Width - rect.Left;
+                int finalWidth = 0;
 
-            if (totalWidth > allowableWidth)
-            {
-                finalWidth = allowableWidth;
-            }
-            else
-            {
-                finalWidth = totalWidth;
-            }
+                if (totalWidth > allowableWidth)
+                {
+                    finalWidth = allowableWidth;
+                }
+                else
+                {
+                    finalWidth = allowableWidth;
+                }
 
-            rect.Width = finalWidth;
+                rect.Width = finalWidth;
+                Console.WriteLine("finalWidth " + finalWidth);
 
-            int totalHeight = rect.Top + rect.Height; //think same as Bottom property
-            int allowableHeight = localImage.Height - rect.Top;
-            int finalHeight = 0;
+                int totalHeight = rect.Top + rect.Height; //think same as Bottom property
+                int allowableHeight = localImage.Height - rect.Top;
+                int finalHeight = 0;
 
-            if (totalHeight > allowableHeight)
-            {
-                finalHeight = allowableHeight;
-            }
-            else
-            {
-                finalHeight = totalHeight;
-            }
+                if (totalHeight > allowableHeight)
+                {
+                    finalHeight = allowableHeight;
+                }
+                else
+                {
+                    finalHeight = allowableHeight;
+                }
 
-            rect.Height = finalHeight;
+                rect.Height = finalHeight;
+                Console.WriteLine("finalHeight " + finalHeight); */
 
-            return localImage.Clone(rect, localImage.PixelFormat);
+                return localImage.Clone(rect, localImage.PixelFormat);
+            
         }
         
     }
