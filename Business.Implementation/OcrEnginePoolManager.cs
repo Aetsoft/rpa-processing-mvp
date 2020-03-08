@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Business.Abstraction;
 using DomainModels.Enums;
 using Tesseract;
@@ -33,7 +30,7 @@ namespace Business.Implementation
 
         public OcrEnginePoolManager()
         {
-            path = AppDomain.CurrentDomain.BaseDirectory + "Tesseract";
+            path = AppDomain.CurrentDomain.BaseDirectory + "Tesseract/tessdata";
 
             foreach (var lang in _supportedLangDictionary)
             {

@@ -23,6 +23,13 @@
             <param name="json"></param>
             <returns>Ocr-ed text for whole document</returns>
         </member>
+        <member name="M:RpaSelfHostedApp.Controller.OcrController.PostForHocr(RpaSelfHostedApp.Models.PostBase64DataOcrRequestModel)">
+            <summary>
+            POST api/ocr/base64/hocr
+            </summary>
+            <param name="json"></param>
+            <returns>XML HOCR for the whole page</returns>
+        </member>
         <member name="M:RpaSelfHostedApp.Controller.OcrController.PostAll(RpaSelfHostedApp.Models.MultipleFieldsOcrRequestModel)">
             <summary>
             POST api/ocr/bulk
