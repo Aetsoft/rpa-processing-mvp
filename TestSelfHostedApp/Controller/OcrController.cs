@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -66,6 +65,19 @@ namespace RpaSelfHostedApp.Controller
                 OcrTextResponse = this._ocrEnginePool.GetEngineForLang(value.Language).ReadText(value.Base64String)
             };
             return Ok(response);
+        }
+
+        /// <summary>
+        /// POST api/ocr/base64/hocr
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns>XML HOCR for the whole page</returns>
+        [HttpPost]
+        [Route("base64/hocr")]
+        [SwaggerResponse(HttpStatusCode.OK, "Image was HOCR-ed successfully")]
+        public IHttpActionResult PostForHocr([FromBody] PostBase64DataOcrRequestModel value)
+        {
+            return Ok(this._ocrEnginePool.GetEngineForLang(value.Language).ReadHText(value.Base64String));
         }
 
         /// <summary>
