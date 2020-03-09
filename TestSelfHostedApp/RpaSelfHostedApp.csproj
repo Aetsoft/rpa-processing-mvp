@@ -152,49 +152,22 @@
     <None Include="Tesseract\tessdata\rus.traineddata">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Web\scripts\jquery-3.4.1.min.map">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Web\scripts\jquery-3.4.1.slim.min.map">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="RpaSelfHostedApp.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Web\scripts\jquery-3.4.1.intellisense.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Web\scripts\jquery-3.4.1.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Web\scripts\jquery-3.4.1.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Web\scripts\jquery-3.4.1.slim.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Web\scripts\jquery-3.4.1.slim.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Web\scripts\jquery.signalR-2.4.1.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Web\scripts\jquery.signalR-2.4.1.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Web\index.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Web\scripts\TestJs.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Web\3rdpartylicenses.txt" />
+    <Content Include="Web\favicon.ico" />
+    <Content Include="Web\index.html" />
+    <Content Include="Web\main.4a762fb9364ccee2b06e.js" />
+    <Content Include="Web\polyfills-es5.09e2bba2ab7376db56b8.js" />
+    <Content Include="Web\polyfills.b948c5521048b3f55fad.js" />
+    <Content Include="Web\runtime.a8ef3a8272419c2e2c66.js" />
+    <Content Include="Web\styles.6f2b30d98af199e04370.css" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Web\css\" />
-    <Folder Include="Web\images\" />
-    <Folder Include="Web\pages\" />
+    <Folder Include="Web\assets\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business.Abstraction\Business.Abstraction.csproj">
